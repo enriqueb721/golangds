@@ -54,4 +54,7 @@ func (q *Queue) Swap(otherQueue *Queue) {
 	q = temp
 }
 
-// TODO: Clear function
+// Clear func
+func (q *Queue) Clear() {
+	q.store = nil
+}

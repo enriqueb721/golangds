@@ -47,4 +47,14 @@ func (s *Stack) Pop() error {
 	return nil
 }
 
-// TODO: swap functiom
+// Swap func
+func (s *Stack) Swap(otherStack *Stack) {
+	temp := otherStack
+	otherStack = s
+	s = temp
+}
+
+// Clear func
+func (s *Stack) Clear() {
+	s.store = nil
+}

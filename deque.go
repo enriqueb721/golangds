@@ -41,7 +41,12 @@ func (d *Deque) Back() (interface{}, error) {
 	return d.store[0], nil
 }
 
-// TODO: assign function
+// Assign func
+func (d *Deque) Assign(n uint, value *interface{}) {
+	for i := uint(0); i < n; i++ {
+		d.store = append(d.store, value)
+	}
+}
 
 // PushBack func
 func (d *Deque) PushBack(element interface{}) {
@@ -109,5 +114,3 @@ func (d *Deque) Swap(otherDeque *Deque) {
 func (d *Deque) Clear() {
 	d.store = nil
 }
-
-// TODO: swap function
