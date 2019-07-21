@@ -1,20 +1,10 @@
-package main
+package golangds
 
 import "fmt"
 
 // Stack data structure
 type Stack struct {
-	store []*interface{}
-}
-
-// Empty func
-func (s *Stack) Empty() bool {
-	return len(s.store) == 0
-}
-
-// Size func
-func (s *Stack) Size() uint {
-	return uint(len(s.store))
+	container
 }
 
 // Top func
@@ -52,9 +42,4 @@ func (s *Stack) Swap(otherStack *Stack) {
 	temp := otherStack
 	otherStack = s
 	s = temp
-}
-
-// Clear func
-func (s *Stack) Clear() {
-	s.store = nil
 }

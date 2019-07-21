@@ -1,20 +1,10 @@
-package main
+package golangds
 
 import "fmt"
 
 // Deque data structure
 type Deque struct {
-	store []*interface{}
-}
-
-// Size func
-func (d *Deque) Size() uint {
-	return uint(len(d.store))
-}
-
-// Empty func
-func (d *Deque) Empty() bool {
-	return len(d.store) == 0
+	container
 }
 
 // At func
@@ -108,9 +98,4 @@ func (d *Deque) Swap(otherDeque *Deque) {
 	temp := otherDeque
 	otherDeque = d
 	d = temp
-}
-
-// Clear func
-func (d *Deque) Clear() {
-	d.store = nil
 }

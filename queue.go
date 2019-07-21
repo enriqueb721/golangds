@@ -1,20 +1,10 @@
-package main
+package golangds
 
 import "fmt"
 
 // Queue data structure
 type Queue struct {
-	store []*interface{}
-}
-
-// Empty func
-func (q *Queue) Empty() bool {
-	return len(q.store) == 0
-}
-
-// Size func
-func (q *Queue) Size() uint {
-	return uint(len(q.store))
+	container
 }
 
 // Front func
@@ -52,9 +42,4 @@ func (q *Queue) Swap(otherQueue *Queue) {
 	temp := otherQueue
 	otherQueue = q
 	q = temp
-}
-
-// Clear func
-func (q *Queue) Clear() {
-	q.store = nil
 }
