@@ -12,7 +12,7 @@ func (q *Queue) Front() (interface{}, error) {
 	if q.Empty() {
 		return nil, fmt.Errorf("The Queue is empty, it should have at least one item")
 	}
-	return q.store[0], nil
+	return *q.store[0], nil
 }
 
 // Back func
@@ -20,7 +20,7 @@ func (q *Queue) Back() (interface{}, error) {
 	if q.Empty() {
 		return nil, fmt.Errorf("The Queue is empty, it should have at least one item")
 	}
-	return q.store[len(q.store)-1], nil
+	return *q.store[len(q.store)-1], nil
 }
 
 // Push func

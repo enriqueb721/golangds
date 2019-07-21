@@ -12,7 +12,7 @@ func (d *Deque) At(index uint) (interface{}, error) {
 	if index >= d.Size() || index < 0 {
 		return nil, fmt.Errorf("Index '%d' is out of limits", index)
 	}
-	return d.store[index], nil
+	return *d.store[index], nil
 }
 
 // Front func
@@ -20,7 +20,7 @@ func (d *Deque) Front() (interface{}, error) {
 	if d.Empty() {
 		return nil, fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
-	return d.store[len(d.store)-1], nil
+	return *d.store[len(d.store)-1], nil
 }
 
 // Back func
@@ -28,7 +28,7 @@ func (d *Deque) Back() (interface{}, error) {
 	if d.Empty() {
 		return nil, fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
-	return d.store[0], nil
+	return *d.store[0], nil
 }
 
 // Assign func
