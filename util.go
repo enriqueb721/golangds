@@ -1,20 +1,20 @@
 package golangds
 
-type container struct {
+type storage struct {
 	store []*interface{}
 }
 
 // Empty func
-func (c *container) Empty() bool {
-	return len(c.store) == 0
+func (s *storage) Empty() bool {
+	return len(s.store) == 0
 }
 
 // Size func
-func (c *container) Size() uint {
-	return uint(len(c.store))
+func (s *storage) Size() uint {
+	return uint(len(s.store))
 }
 
 // Clear func
-func (c *container) Clear() {
-	c.store = nil
+func (s *storage) Clear() {
+	s.store = nil
 }

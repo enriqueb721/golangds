@@ -4,7 +4,7 @@ import "fmt"
 
 // Stack data structure
 type Stack struct {
-	container
+	storage
 }
 
 // Top func

@@ -4,7 +4,7 @@ import "fmt"
 
 // Queue data structure
 type Queue struct {
-	container
+	storage
 }
 
 // Front func

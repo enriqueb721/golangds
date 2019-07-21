@@ -4,7 +4,7 @@ import "fmt"
 
 // Deque data structure
 type Deque struct {
-	container
+	storage
 }
 
 // At func
