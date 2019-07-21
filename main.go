@@ -1,5 +1,9 @@
 package golangds
 
-// TODO: Vector, List, ForwardList, PriorityQueue, Map, Multimap
-// TODO: Set, Multiset, HashMap, HashSet, HashMultimap, HashMultiset
+// TODO: Vector
+// List, ForwardList, DoublyLinkedList, CircularLinkedList
+// TODO: Heap(PriorityQueue)
+// TODO: Map, Multimap, HashMap, HashMultimap
+// TODO: Set, Multiset, HashSet, HashMultiset
 // TODO: Graph
+// TODO: UnionFind
