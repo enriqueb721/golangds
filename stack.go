@@ -12,8 +12,8 @@ func (s *Stack) Top() (interface{}, error) {
 	if s.Empty() {
 		return nil, fmt.Errorf("The Stack is empty, it should have at least one item")
 	}
-	s.Lock()
-	defer s.Unlock()
+	s.RLock()
+	defer s.RUnlock()
 	return *s.store[len(s.store)-1], nil
 }
 
@@ -22,8 +22,8 @@ func (s *Stack) Bottom() (interface{}, error) {
 	if s.Empty() {
 		return nil, fmt.Errorf("The Stack is empty, it should have at least one item")
 	}
-	s.Lock()
-	defer s.Unlock()
+	s.RLock()
+	defer s.RUnlock()
 	return *s.store[0], nil
 }
 
