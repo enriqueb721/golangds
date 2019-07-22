@@ -12,8 +12,8 @@ func (q *Queue) Front() (interface{}, error) {
 	if q.Empty() {
 		return nil, fmt.Errorf("The Queue is empty, it should have at least one item")
 	}
-	q.RLock()
-	defer q.RUnlock()
+	q.mutex.RLock()
+	defer q.mutex.RUnlock()
 	return *q.store[0], nil
 }
 
@@ -22,15 +22,15 @@ func (q *Queue) Back() (interface{}, error) {
 	if q.Empty() {
 		return nil, fmt.Errorf("The Queue is empty, it should have at least one item")
 	}
-	q.RLock()
-	defer q.RUnlock()
+	q.mutex.RLock()
+	defer q.mutex.RUnlock()
 	return *q.store[len(q.store)-1], nil
 }
 
 // Push func
 func (q *Queue) Push(element interface{}) {
-	q.Lock()
-	defer q.Unlock()
+	q.mutex.Lock()
+	defer q.mutex.Unlock()
 	q.store = append(q.store, &element)
 }
 
@@ -39,8 +39,8 @@ func (q *Queue) Pop() error {
 	if q.Empty() {
 		return fmt.Errorf("The Queue is empty, it should have at least one item")
 	}
-	q.Lock()
-	defer q.Unlock()
+	q.mutex.Lock()
+	defer q.mutex.Unlock()
 	q.store = q.store[1:]
 	return nil
 }
