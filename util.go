@@ -5,20 +5,25 @@ import "sync"
 // storage struct
 type storage struct {
 	sync.RWMutex
-	store []*interface{}
+	store       []*interface{}
+	concurrency bool
 }
 
 // Empty func
 func (s *storage) Empty() bool {
-	s.RLock()
-	defer s.RUnlock()
+	if s.concurrency {
+		s.RLock()
+		defer s.RUnlock()
+	}
 	return len(s.store) == 0
 }
 
 // Size func
 func (s *storage) Size() uint {
-	s.RLock()
-	defer s.RUnlock()
+	if s.concurrency {
+		s.RLock()
+		defer s.RUnlock()
+	}
 	return uint(len(s.store))
 }
 
