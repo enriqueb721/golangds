@@ -2,6 +2,7 @@ package test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/alexandrenriq/golangds"
 )
@@ -140,3 +141,36 @@ func TestClearThenPush(t *testing.T) {
 }
 
 // TODO: test swap function
+
+func TestConcurrentPushAndPop(t *testing.T) {
+	st := golangds.Stack{}
+	endF1 := false
+	endF2 := false
+	go func() {
+		for !st.Empty() || !endF2 {
+			if !st.Empty() {
+				t.Log("Empty")
+				val, err := st.Top()
+				if err != nil {
+					t.Error("There is an error in Top function")
+				}
+				err = st.Pop()
+				if err != nil {
+					t.Error("There is an error in Pop function")
+				}
+				t.Logf("Empty val: %d", val)
+			}
+		}
+		endF1 = true
+	}()
+	go func() {
+		for i := 0; i < 10000; i++ {
+			st.Push(i)
+		}
+		endF2 = true
+	}()
+	time.Sleep(2 * time.Second)
+	if !endF1 || !endF2 {
+		t.Error("The concurrent functions did not finish")
+	}
+}
