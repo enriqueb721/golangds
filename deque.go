@@ -12,8 +12,10 @@ func (d *Deque) At(index uint) (interface{}, error) {
 	if index >= d.Size() || index < 0 {
 		return nil, fmt.Errorf("Index '%d' is out of limits", index)
 	}
-	d.mutex.RLock()
-	defer d.mutex.RUnlock()
+	if d.isConcurrent {
+		d.mutex.RLock()
+		defer d.mutex.RUnlock()
+	}
 	return *d.store[index], nil
 }
 
@@ -22,8 +24,10 @@ func (d *Deque) Front() (interface{}, error) {
 	if d.Empty() {
 		return nil, fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
-	d.mutex.RLock()
-	defer d.mutex.RUnlock()
+	if d.isConcurrent {
+		d.mutex.RLock()
+		defer d.mutex.RUnlock()
+	}
 	return *d.store[len(d.store)-1], nil
 }
 
@@ -32,15 +36,19 @@ func (d *Deque) Back() (interface{}, error) {
 	if d.Empty() {
 		return nil, fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
-	d.mutex.RLock()
-	defer d.mutex.Unlock()
+	if d.isConcurrent {
+		d.mutex.RLock()
+		defer d.mutex.Unlock()
+	}
 	return *d.store[0], nil
 }
 
 // Assign func
 func (d *Deque) Assign(n uint, value *interface{}) {
-	d.mutex.Lock()
-	defer d.mutex.Unlock()
+	if d.isConcurrent {
+		d.mutex.Lock()
+		defer d.mutex.Unlock()
+	}
 	for i := uint(0); i < n; i++ {
 		d.store = append(d.store, value)
 	}
@@ -48,15 +56,19 @@ func (d *Deque) Assign(n uint, value *interface{}) {
 
 // PushBack func
 func (d *Deque) PushBack(element interface{}) {
-	d.mutex.Lock()
-	defer d.mutex.Unlock()
+	if d.isConcurrent {
+		d.mutex.Lock()
+		defer d.mutex.Unlock()
+	}
 	d.store = append(d.store, &element)
 }
 
 // PushFront func
 func (d *Deque) PushFront(element interface{}) {
-	d.mutex.Lock()
-	defer d.mutex.Unlock()
+	if d.isConcurrent {
+		d.mutex.Lock()
+		defer d.mutex.Unlock()
+	}
 	var temp []*interface{}
 	temp = append(temp, &element)
 	d.store = append(temp, d.store...)
@@ -64,8 +76,10 @@ func (d *Deque) PushFront(element interface{}) {
 
 // PopBack func
 func (d *Deque) PopBack() error {
-	d.mutex.Lock()
-	defer d.mutex.Unlock()
+	if d.isConcurrent {
+		d.mutex.Lock()
+		defer d.mutex.Unlock()
+	}
 	if d.Empty() {
 		return fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
@@ -75,8 +89,10 @@ func (d *Deque) PopBack() error {
 
 // PopFront func
 func (d *Deque) PopFront() error {
-	d.mutex.Lock()
-	defer d.mutex.Unlock()
+	if d.isConcurrent {
+		d.mutex.Lock()
+		defer d.mutex.Unlock()
+	}
 	if d.Empty() {
 		return fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
@@ -86,8 +102,10 @@ func (d *Deque) PopFront() error {
 
 // Insert func
 func (d *Deque) Insert(index uint, element *interface{}) error {
-	d.mutex.Lock()
-	defer d.mutex.Unlock()
+	if d.isConcurrent {
+		d.mutex.Lock()
+		defer d.mutex.Unlock()
+	}
 	if index > d.Size() {
 		return fmt.Errorf("The index %d should not be greater than the current size %d", index, d.Size())
 	}
@@ -104,8 +122,10 @@ func (d *Deque) Insert(index uint, element *interface{}) error {
 
 // Erase func
 func (d *Deque) Erase(index uint) error {
-	d.mutex.Lock()
-	d.mutex.Unlock()
+	if d.isConcurrent {
+		d.mutex.Lock()
+		defer d.mutex.Unlock()
+	}
 	if index >= d.Size() {
 		return fmt.Errorf("The index %d should not be greater or equal than the current size %d", index, d.Size())
 	}
