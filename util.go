@@ -4,14 +4,20 @@ import "sync"
 
 // storage struct
 type storage struct {
-	mutex       sync.RWMutex
-	store       []*interface{}
-	concurrency bool
+	mutex sync.RWMutex
+	store []*interface{}
+
+	isConcurrent bool
+}
+
+// EnableConcurrent func
+func (s *storage) EnableConcurrency() {
+	s.isConcurrent = true
 }
 
 // Empty func
 func (s *storage) Empty() bool {
-	if s.concurrency {
+	if s.isConcurrent {
 		s.mutex.RLock()
 		defer s.mutex.RUnlock()
 	}
@@ -20,7 +26,7 @@ func (s *storage) Empty() bool {
 
 // Size func
 func (s *storage) Size() uint {
-	if s.concurrency {
+	if s.isConcurrent {
 		s.mutex.RLock()
 		defer s.mutex.RUnlock()
 	}
@@ -29,7 +35,9 @@ func (s *storage) Size() uint {
 
 // Clear func
 func (s *storage) Clear() {
-	s.mutex.Lock()
-	defer s.mutex.Unlock()
+	if s.isConcurrent {
+		s.mutex.Lock()
+		defer s.mutex.Unlock()
+	}
 	s.store = nil
 }

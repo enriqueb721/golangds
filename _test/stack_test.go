@@ -144,6 +144,7 @@ func TestClearThenPush(t *testing.T) {
 
 func TestConcurrentPushAndPop(t *testing.T) {
 	st := golangds.Stack{}
+	st.EnableConcurrency()
 	endF1 := false
 	endF2 := false
 	go func() {
@@ -164,7 +165,7 @@ func TestConcurrentPushAndPop(t *testing.T) {
 		endF1 = true
 	}()
 	go func() {
-		for i := 0; i < 10000; i++ {
+		for i := 0; i < 100000; i++ {
 			st.Push(i)
 		}
 		endF2 = true
