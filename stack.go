@@ -9,24 +9,22 @@ type Stack struct {
 
 // Top func
 func (s *Stack) Top() (interface{}, error) {
-	if s.Empty() {
-		return nil, fmt.Errorf("The Stack is empty, it should have at least one item")
-	}
 	if s.isConcurrent {
-		s.mutex.RLock()
 		defer s.mutex.RUnlock()
+	}
+	if s.emptyWithoutRUnlock() { // Mantain the RLock function until the end of the current function
+		return nil, fmt.Errorf("The Stack is empty, it should have at least one item")
 	}
 	return *s.store[len(s.store)-1], nil
 }
 
 // Bottom func
 func (s *Stack) Bottom() (interface{}, error) {
-	if s.Empty() {
-		return nil, fmt.Errorf("The Stack is empty, it should have at least one item")
-	}
 	if s.isConcurrent {
-		s.mutex.RLock()
 		defer s.mutex.RUnlock()
+	}
+	if s.emptyWithoutRUnlock() {
+		return nil, fmt.Errorf("The Stack is empty, it should have at least one item")
 	}
 	return *s.store[0], nil
 }
@@ -42,12 +40,11 @@ func (s *Stack) Push(element interface{}) {
 
 // Pop func
 func (s *Stack) Pop() error {
-	if s.Empty() {
-		return fmt.Errorf("The Stack is empty, it should have at least one item")
-	}
 	if s.isConcurrent {
-		s.mutex.Lock()
 		defer s.mutex.Unlock()
+	}
+	if s.emptyWithoutUnlock() {
+		return fmt.Errorf("The Stack is empty, it should have at least one item")
 	}
 	s.store = s.store[:len(s.store)-1]
 	return nil

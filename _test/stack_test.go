@@ -167,11 +167,13 @@ func TestConcurrentPushAndPop(t *testing.T) {
 	go func() {
 		for i := 0; i < 100000; i++ {
 			st.Push(i)
+			t.Log(i)
 		}
 		endF2 = true
 	}()
 	time.Sleep(2 * time.Second)
 	if !endF1 || !endF2 {
 		t.Error("The concurrent functions did not finish")
+		t.Log(endF1, endF2)
 	}
 }
