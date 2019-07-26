@@ -167,7 +167,6 @@ func TestConcurrentPushAndPop(t *testing.T) {
 	go func() {
 		for i := 0; i < 100000; i++ {
 			st.Push(i)
-			t.Log(i)
 		}
 		endF2 = true
 	}()

@@ -9,24 +9,22 @@ type Queue struct {
 
 // Front func
 func (q *Queue) Front() (interface{}, error) {
-	if q.Empty() {
-		return nil, fmt.Errorf("The Queue is empty, it should have at least one item")
-	}
 	if q.isConcurrent {
-		q.mutex.RLock()
 		defer q.mutex.RUnlock()
+	}
+	if q.emptyWithoutRUnlock() {
+		return nil, fmt.Errorf("The Queue is empty, it should have at least one item")
 	}
 	return *q.store[0], nil
 }
 
 // Back func
 func (q *Queue) Back() (interface{}, error) {
-	if q.Empty() {
-		return nil, fmt.Errorf("The Queue is empty, it should have at least one item")
-	}
 	if q.isConcurrent {
-		q.mutex.RLock()
 		defer q.mutex.RUnlock()
+	}
+	if q.emptyWithoutRUnlock() {
+		return nil, fmt.Errorf("The Queue is empty, it should have at least one item")
 	}
 	return *q.store[len(q.store)-1], nil
 }
@@ -42,12 +40,11 @@ func (q *Queue) Push(element interface{}) {
 
 // Pop func
 func (q *Queue) Pop() error {
-	if q.Empty() {
-		return fmt.Errorf("The Queue is empty, it should have at least one item")
-	}
 	if q.isConcurrent {
-		q.mutex.Lock()
 		defer q.mutex.Unlock()
+	}
+	if q.emptyWithoutUnlock() {
+		return fmt.Errorf("The Queue is empty, it should have at least one item")
 	}
 	q.store = q.store[1:]
 	return nil

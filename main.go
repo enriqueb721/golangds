@@ -1,6 +1,6 @@
 package golangds
 
-// TODO: Vector, Bitset
+// TODO: Vector, Bitset, String
 // TODO: List, ForwardList, DoublyLinkedList, CircularLinkedList
 // TODO: Heap(PriorityQueue)
 // TODO: Map, Multimap, HashMap, HashMultimap

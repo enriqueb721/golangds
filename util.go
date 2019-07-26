@@ -50,11 +50,22 @@ func (s *storage) Size() uint {
 	return uint(len(s.store))
 }
 
-func (s *storage) sizeWithoutRUnlock() bool {
+func (s *storage) sizeWithoutRUnlock() uint {
 	if s.isConcurrent {
 		s.mutex.RLock()
 	}
-	return len(s.store) == 0
+	return uint(len(s.store))
+}
+
+func (s *storage) sizeWithoutUnlock() uint {
+	if s.isConcurrent {
+		s.mutex.Lock()
+	}
+	return uint(len(s.store))
+}
+
+func (s *storage) sizeWithoutConcurrency() uint {
+	return uint(len(s.store))
 }
 
 // Clear func
