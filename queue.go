@@ -9,7 +9,7 @@ type Queue struct {
 
 // Front func
 func (q *Queue) Front() (interface{}, error) {
-	if q.isConcurrent {
+	if q.mutex.isConcurrent {
 		defer q.mutex.RUnlock()
 	}
 	if q.emptyWithoutRUnlock() {
@@ -20,7 +20,7 @@ func (q *Queue) Front() (interface{}, error) {
 
 // Back func
 func (q *Queue) Back() (interface{}, error) {
-	if q.isConcurrent {
+	if q.mutex.isConcurrent {
 		defer q.mutex.RUnlock()
 	}
 	if q.emptyWithoutRUnlock() {
@@ -31,7 +31,7 @@ func (q *Queue) Back() (interface{}, error) {
 
 // Push func
 func (q *Queue) Push(element interface{}) {
-	if q.isConcurrent {
+	if q.mutex.isConcurrent {
 		q.mutex.Lock()
 		defer q.mutex.Unlock()
 	}
@@ -40,7 +40,7 @@ func (q *Queue) Push(element interface{}) {
 
 // Pop func
 func (q *Queue) Pop() error {
-	if q.isConcurrent {
+	if q.mutex.isConcurrent {
 		defer q.mutex.Unlock()
 	}
 	if q.emptyWithoutUnlock() {
@@ -51,8 +51,8 @@ func (q *Queue) Pop() error {
 }
 
 // Swap func
-func (q *Queue) Swap(otherQueue *Queue) {
-	temp := otherQueue
-	otherQueue = q
+func (q *Queue) Swap(anotherQueue *Queue) {
+	temp := anotherQueue
+	anotherQueue = q
 	q = temp
 }

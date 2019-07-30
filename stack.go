@@ -9,7 +9,7 @@ type Stack struct {
 
 // Top func
 func (s *Stack) Top() (interface{}, error) {
-	if s.isConcurrent {
+	if s.mutex.isConcurrent {
 		defer s.mutex.RUnlock()
 	}
 	if s.emptyWithoutRUnlock() { // Mantain the RLock function until the end of the current function
@@ -20,7 +20,7 @@ func (s *Stack) Top() (interface{}, error) {
 
 // Bottom func
 func (s *Stack) Bottom() (interface{}, error) {
-	if s.isConcurrent {
+	if s.mutex.isConcurrent {
 		defer s.mutex.RUnlock()
 	}
 	if s.emptyWithoutRUnlock() {
@@ -31,7 +31,7 @@ func (s *Stack) Bottom() (interface{}, error) {
 
 // Push func
 func (s *Stack) Push(element interface{}) {
-	if s.isConcurrent {
+	if s.mutex.isConcurrent {
 		s.mutex.Lock()
 		defer s.mutex.Unlock()
 	}
@@ -40,7 +40,7 @@ func (s *Stack) Push(element interface{}) {
 
 // Pop func
 func (s *Stack) Pop() error {
-	if s.isConcurrent {
+	if s.mutex.isConcurrent {
 		defer s.mutex.Unlock()
 	}
 	if s.emptyWithoutUnlock() {
@@ -51,8 +51,8 @@ func (s *Stack) Pop() error {
 }
 
 // Swap func
-func (s *Stack) Swap(otherStack *Stack) {
-	temp := otherStack
-	otherStack = s
+func (s *Stack) Swap(anotherStack *Stack) {
+	temp := anotherStack
+	anotherStack = s
 	s = temp
 }

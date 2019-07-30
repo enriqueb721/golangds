@@ -9,7 +9,7 @@ type Deque struct {
 
 // At func
 func (d *Deque) At(index uint) (interface{}, error) {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		defer d.mutex.RUnlock()
 	}
 	if index >= d.sizeWithoutRUnlock() || index < 0 {
@@ -20,7 +20,7 @@ func (d *Deque) At(index uint) (interface{}, error) {
 
 // Front func
 func (d *Deque) Front() (interface{}, error) {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		defer d.mutex.RUnlock()
 	}
 	if d.emptyWithoutRUnlock() {
@@ -31,7 +31,7 @@ func (d *Deque) Front() (interface{}, error) {
 
 // Back func
 func (d *Deque) Back() (interface{}, error) {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		defer d.mutex.RUnlock()
 	}
 	if d.emptyWithoutRUnlock() {
@@ -42,7 +42,7 @@ func (d *Deque) Back() (interface{}, error) {
 
 // Assign func
 func (d *Deque) Assign(n uint, value *interface{}) {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		d.mutex.Lock()
 		defer d.mutex.Unlock()
 	}
@@ -53,7 +53,7 @@ func (d *Deque) Assign(n uint, value *interface{}) {
 
 // PushBack func
 func (d *Deque) PushBack(element interface{}) {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		d.mutex.Lock()
 		defer d.mutex.Unlock()
 	}
@@ -62,7 +62,7 @@ func (d *Deque) PushBack(element interface{}) {
 
 // PushFront func
 func (d *Deque) PushFront(element interface{}) {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		d.mutex.Lock()
 		defer d.mutex.Unlock()
 	}
@@ -73,7 +73,7 @@ func (d *Deque) PushFront(element interface{}) {
 
 // PopBack func
 func (d *Deque) PopBack() error {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		defer d.mutex.Unlock()
 	}
 	if d.emptyWithoutUnlock() {
@@ -85,7 +85,7 @@ func (d *Deque) PopBack() error {
 
 // PopFront func
 func (d *Deque) PopFront() error {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		defer d.mutex.Unlock()
 	}
 	if d.emptyWithoutUnlock() {
@@ -97,11 +97,11 @@ func (d *Deque) PopFront() error {
 
 // Insert func
 func (d *Deque) Insert(index uint, element *interface{}) error {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		defer d.mutex.Unlock()
 	}
 	if index > d.sizeWithoutUnlock() {
-		return fmt.Errorf("The index %d should not be greater than the current size %d", index, d.Size())
+		return fmt.Errorf("The index %d should not be greater than the current size %d", index, d.sizeWithoutConcurrency())
 	}
 	if index == d.sizeWithoutConcurrency() {
 		d.store = append(d.store, element)
@@ -116,19 +116,19 @@ func (d *Deque) Insert(index uint, element *interface{}) error {
 
 // Erase func
 func (d *Deque) Erase(index uint) error {
-	if d.isConcurrent {
+	if d.mutex.isConcurrent {
 		defer d.mutex.Unlock()
 	}
 	if index >= d.sizeWithoutUnlock() {
-		return fmt.Errorf("The index %d should not be greater or equal than the current size %d", index, d.Size())
+		return fmt.Errorf("The index %d should not be greater or equal than the current size %d", index, d.sizeWithoutConcurrency())
 	}
 	d.store = append(d.store[:index], d.store[index+1:]...)
 	return nil
 }
 
 // Swap func
-func (d *Deque) Swap(otherDeque *Deque) {
-	temp := otherDeque
-	otherDeque = d
+func (d *Deque) Swap(anotherDeque *Deque) {
+	temp := anotherDeque
+	anotherDeque = d
 	d = temp
 }
