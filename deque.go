@@ -1,128 +1,132 @@
 package golangds
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/alexandrenriq/golangds/util"
+)
 
 // Deque data structure
 type Deque struct {
-	storage
+	gdsutil.Storage
 }
 
 // At func
 func (d *Deque) At(index uint) (interface{}, error) {
-	if d.mutex.isConcurrent {
-		defer d.mutex.RUnlock()
+	if d.IsConcurrent() {
+		defer d.RWMutex.RUnlock()
 	}
-	if index >= d.sizeWithoutRUnlock() || index < 0 {
+	if index >= d.SizeWithoutRUnlock() || index < 0 {
 		return nil, fmt.Errorf("Index '%d' is out of limits", index)
 	}
-	return *d.store[index], nil
+	return *d.Store()[index], nil
 }
 
 // Front func
 func (d *Deque) Front() (interface{}, error) {
-	if d.mutex.isConcurrent {
-		defer d.mutex.RUnlock()
+	if d.IsConcurrent() {
+		defer d.RWMutex.RUnlock()
 	}
-	if d.emptyWithoutRUnlock() {
+	if d.EmptyWithoutRUnlock() {
 		return nil, fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
-	return *d.store[len(d.store)-1], nil
+	return *d.Store()[len(d.Store())-1], nil
 }
 
 // Back func
 func (d *Deque) Back() (interface{}, error) {
-	if d.mutex.isConcurrent {
-		defer d.mutex.RUnlock()
+	if d.IsConcurrent() {
+		defer d.RWMutex.RUnlock()
 	}
-	if d.emptyWithoutRUnlock() {
+	if d.EmptyWithoutRUnlock() {
 		return nil, fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
-	return *d.store[0], nil
+	return *d.Store()[0], nil
 }
 
 // Assign func
 func (d *Deque) Assign(n uint, value *interface{}) {
-	if d.mutex.isConcurrent {
-		d.mutex.Lock()
-		defer d.mutex.Unlock()
+	if d.IsConcurrent() {
+		d.RWMutex.Lock()
+		defer d.RWMutex.Unlock()
 	}
 	for i := uint(0); i < n; i++ {
-		d.store = append(d.store, value)
+		d.SetStore(append(d.Store(), value))
 	}
 }
 
 // PushBack func
 func (d *Deque) PushBack(element interface{}) {
-	if d.mutex.isConcurrent {
-		d.mutex.Lock()
-		defer d.mutex.Unlock()
+	if d.IsConcurrent() {
+		d.RWMutex.Lock()
+		defer d.RWMutex.Unlock()
 	}
-	d.store = append(d.store, &element)
+	d.SetStore(append(d.Store(), &element))
 }
 
 // PushFront func
 func (d *Deque) PushFront(element interface{}) {
-	if d.mutex.isConcurrent {
-		d.mutex.Lock()
-		defer d.mutex.Unlock()
+	if d.IsConcurrent() {
+		d.RWMutex.Lock()
+		defer d.RWMutex.Unlock()
 	}
 	var temp []*interface{}
 	temp = append(temp, &element)
-	d.store = append(temp, d.store...)
+	d.SetStore(append(temp, d.Store()...))
 }
 
 // PopBack func
 func (d *Deque) PopBack() error {
-	if d.mutex.isConcurrent {
-		defer d.mutex.Unlock()
+	if d.IsConcurrent() {
+		defer d.RWMutex.Unlock()
 	}
-	if d.emptyWithoutUnlock() {
+	if d.EmptyWithoutUnlock() {
 		return fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
-	d.store = d.store[:1]
+	d.SetStore(d.Store()[:1])
 	return nil
 }
 
 // PopFront func
 func (d *Deque) PopFront() error {
-	if d.mutex.isConcurrent {
-		defer d.mutex.Unlock()
+	if d.IsConcurrent() {
+		defer d.RWMutex.Unlock()
 	}
-	if d.emptyWithoutUnlock() {
+	if d.EmptyWithoutUnlock() {
 		return fmt.Errorf("The Deque is empty, it should have at least one item")
 	}
-	d.store = d.store[1:]
+	d.SetStore(d.Store()[1:])
 	return nil
 }
 
 // Insert func
 func (d *Deque) Insert(index uint, element *interface{}) error {
-	if d.mutex.isConcurrent {
-		defer d.mutex.Unlock()
+	if d.IsConcurrent() {
+		defer d.RWMutex.Unlock()
 	}
-	if index > d.sizeWithoutUnlock() {
-		return fmt.Errorf("The index %d should not be greater than the current size %d", index, d.sizeWithoutConcurrency())
+	if index > d.SizeWithoutUnlock() {
+		return fmt.Errorf("The index %d should not be greater than the current size %d", index, d.SizeWithoutConcurrency())
 	}
-	if index == d.sizeWithoutConcurrency() {
-		d.store = append(d.store, element)
+	if index == d.SizeWithoutConcurrency() {
+		d.SetStore(append(d.Store(), element))
 		return nil
 	}
-	left := d.store[:index]
-	right := d.store[index:]
+	left := d.Store()[:index]
+	right := d.Store()[index:]
 	left = append(left, element)
-	d.store = append(left, right...)
+	d.SetStore(append(left, right...))
 	return nil
 }
 
 // Erase func
 func (d *Deque) Erase(index uint) error {
-	if d.mutex.isConcurrent {
-		defer d.mutex.Unlock()
+	if d.IsConcurrent() {
+		defer d.RWMutex.Unlock()
 	}
-	if index >= d.sizeWithoutUnlock() {
-		return fmt.Errorf("The index %d should not be greater or equal than the current size %d", index, d.sizeWithoutConcurrency())
+	if index >= d.SizeWithoutUnlock() {
+		return fmt.Errorf("The index %d should not be greater or equal than the current size %d", index, d.SizeWithoutConcurrency())
 	}
-	d.store = append(d.store[:index], d.store[index+1:]...)
+	d.SetStore(append(d.Store()[:index], d.Store()[index+1:]...))
 	return nil
 }
 
