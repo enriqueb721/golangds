@@ -1,10 +1,14 @@
 package golangds
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/alexandrenriq/golangds/util"
+)
 
 // Vector data structure
 type Vector struct {
-	array
+	gdsutil.Array
 }
 
 // Data func
@@ -14,10 +18,10 @@ func (v *Vector) Data() []*interface{} {
 
 // At func
 func (v *Vector) At(index uint) (interface{}, error) {
-	if v.mutex.isConcurrent {
-		defer v.mutex.RUnlock()
+	if v.IsConcurrent() {
+		defer v.RWMutex.RUnlock()
 	}
-	if index >= v.sizeWithoutRUnlock() || index < 0 {
+	if index >= v.SizeWithoutRUnlock() || index < 0 {
 		return nil, fmt.Errorf("Index '%d is out of limits", index)
 	}
 	return *v.Store[index], nil
@@ -25,10 +29,10 @@ func (v *Vector) At(index uint) (interface{}, error) {
 
 // Front func
 func (v *Vector) Front() (interface{}, error) {
-	if v.mutex.isConcurrent {
-		defer v.mutex.RUnlock()
+	if v.IsConcurrent() {
+		defer v.RWMutex.RUnlock()
 	}
-	if v.emptyWithoutRUnlock() {
+	if v.EmptyWithoutRUnlock() {
 		return nil, fmt.Errorf("The Vector is empty, it should have at least one item")
 	}
 	return *v.Store[len(v.Store)-1], nil
@@ -36,10 +40,10 @@ func (v *Vector) Front() (interface{}, error) {
 
 // Back func
 func (v *Vector) Back() (interface{}, error) {
-	if v.mutex.isConcurrent {
-		defer v.mutex.RUnlock()
+	if v.IsConcurrent() {
+		defer v.RWMutex.RUnlock()
 	}
-	if v.emptyWithoutRUnlock() {
+	if v.EmptyWithoutRUnlock() {
 		return nil, fmt.Errorf("The Vector is empty, it should have at least one item")
 	}
 	return *v.Store[0], nil
@@ -47,9 +51,9 @@ func (v *Vector) Back() (interface{}, error) {
 
 // Assign func
 func (v *Vector) Assign(n uint, value *interface{}) {
-	if v.mutex.isConcurrent {
-		v.mutex.Lock()
-		defer v.mutex.Unlock()
+	if v.IsConcurrent() {
+		v.RWMutex.Lock()
+		defer v.RWMutex.Unlock()
 	}
 	for i := uint(0); i < n; i++ {
 		v.Store = append(v.Store, value)
@@ -58,19 +62,19 @@ func (v *Vector) Assign(n uint, value *interface{}) {
 
 // Append func
 func (v *Vector) Append(element interface{}) {
-	if v.mutex.isConcurrent {
-		v.mutex.Lock()
-		defer v.mutex.Unlock()
+	if v.IsConcurrent() {
+		v.RWMutex.Lock()
+		defer v.RWMutex.Unlock()
 	}
 	v.Store = append(v.Store, &element)
 }
 
 // PopBack func
 func (v *Vector) PopBack() error {
-	if v.mutex.isConcurrent {
-		defer v.mutex.Unlock()
+	if v.IsConcurrent() {
+		defer v.RWMutex.Unlock()
 	}
-	if v.emptyWithoutUnlock() {
+	if v.EmptyWithoutUnlock() {
 		return fmt.Errorf("The Vector is empty, it should have at least one item")
 	}
 	v.Store = v.Store[:1]
@@ -79,13 +83,13 @@ func (v *Vector) PopBack() error {
 
 // Insert func
 func (v *Vector) Insert(index uint, element *interface{}) error {
-	if v.mutex.isConcurrent {
-		defer v.mutex.Unlock()
+	if v.IsConcurrent() {
+		defer v.RWMutex.Unlock()
 	}
-	if index > v.sizeWithoutUnlock() {
-		return fmt.Errorf("The index %d should not be greater than the current size %d", index, v.sizeWithoutConcurrency())
+	if index > v.SizeWithoutUnlock() {
+		return fmt.Errorf("The index %d should not be greater than the current size %d", index, v.SizeWithoutConcurrency())
 	}
-	if index == v.sizeWithoutConcurrency() {
+	if index == v.SizeWithoutConcurrency() {
 		v.Store = append(v.Store, element)
 		return nil
 	}
@@ -98,11 +102,11 @@ func (v *Vector) Insert(index uint, element *interface{}) error {
 
 // Erase func
 func (v *Vector) Erase(index uint) error {
-	if v.mutex.isConcurrent {
-		defer v.mutex.Unlock()
+	if v.IsConcurrent() {
+		defer v.RWMutex.Unlock()
 	}
-	if index >= v.sizeWithoutUnlock() {
-		return fmt.Errorf("The index %d should not be greater or equal than the current size %d", index, v.sizeWithoutConcurrency())
+	if index >= v.SizeWithoutUnlock() {
+		return fmt.Errorf("The index %d should not be greater or equal than the current size %d", index, v.SizeWithoutConcurrency())
 	}
 	v.Store = append(v.Store[:index], v.Store[index+1:]...)
 	return nil

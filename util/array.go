@@ -15,6 +15,7 @@ func (a *Array) Empty() bool {
 	return len(a.Store) == 0
 }
 
+// EmptyWithoutRUnlock func
 func (a *Array) EmptyWithoutRUnlock() bool {
 	if a.IsConcurrent() {
 		a.RWMutex.RLock()
@@ -22,6 +23,7 @@ func (a *Array) EmptyWithoutRUnlock() bool {
 	return len(a.Store) == 0
 }
 
+// EmptyWithoutUnlock func
 func (a *Array) EmptyWithoutUnlock() bool {
 	if a.IsConcurrent() {
 		a.RWMutex.Lock()
@@ -38,6 +40,7 @@ func (a *Array) Size() uint {
 	return uint(len(a.Store))
 }
 
+// SizeWithoutRUnlock func
 func (a *Array) SizeWithoutRUnlock() uint {
 	if a.IsConcurrent() {
 		a.RWMutex.RLock()
@@ -45,6 +48,7 @@ func (a *Array) SizeWithoutRUnlock() uint {
 	return uint(len(a.Store))
 }
 
+// SizeWithoutUnlock func
 func (a *Array) SizeWithoutUnlock() uint {
 	if a.IsConcurrent() {
 		a.RWMutex.Lock()
@@ -52,6 +56,7 @@ func (a *Array) SizeWithoutUnlock() uint {
 	return uint(len(a.Store))
 }
 
+// SizeWithoutConcurrency func
 func (a *Array) SizeWithoutConcurrency() uint {
 	return uint(len(a.Store))
 }

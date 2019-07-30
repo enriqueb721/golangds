@@ -1,52 +1,56 @@
 package golangds
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/alexandrenriq/golangds/util"
+)
 
 // Stack data structure
 type Stack struct {
-	storage
+	gdsutil.Storage
 }
 
 // Top func
 func (s *Stack) Top() (interface{}, error) {
-	if s.mutex.isConcurrent {
-		defer s.mutex.RUnlock()
+	if s.IsConcurrent() {
+		defer s.RWMutex.RUnlock()
 	}
-	if s.emptyWithoutRUnlock() { // Mantain the RLock function until the end of the current function
+	if s.EmptyWithoutRUnlock() { // Mantain the RLock function until the end of the current function
 		return nil, fmt.Errorf("The Stack is empty, it should have at least one item")
 	}
-	return *s.store[len(s.store)-1], nil
+	return *s.Store()[len(s.Store())-1], nil
 }
 
 // Bottom func
 func (s *Stack) Bottom() (interface{}, error) {
-	if s.mutex.isConcurrent {
-		defer s.mutex.RUnlock()
+	if s.IsConcurrent() {
+		defer s.RWMutex.RUnlock()
 	}
-	if s.emptyWithoutRUnlock() {
+	if s.EmptyWithoutRUnlock() {
 		return nil, fmt.Errorf("The Stack is empty, it should have at least one item")
 	}
-	return *s.store[0], nil
+	return *s.Store()[0], nil
 }
 
 // Push func
 func (s *Stack) Push(element interface{}) {
-	if s.mutex.isConcurrent {
-		s.mutex.Lock()
-		defer s.mutex.Unlock()
+	if s.IsConcurrent() {
+		s.RWMutex.Lock()
+		defer s.RWMutex.Unlock()
 	}
-	s.store = append(s.store, &element)
+	s.SetStore(append(s.Store(), &element))
 }
 
 // Pop func
 func (s *Stack) Pop() error {
-	if s.mutex.isConcurrent {
-		defer s.mutex.Unlock()
+	if s.IsConcurrent() {
+		defer s.RWMutex.Unlock()
 	}
-	if s.emptyWithoutUnlock() {
+	if s.EmptyWithoutUnlock() {
 		return fmt.Errorf("The Stack is empty, it should have at least one item")
 	}
-	s.store = s.store[:len(s.store)-1]
+	s.SetStore(s.Store()[:len(s.Store())-1])
 	return nil
 }
 

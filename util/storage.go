@@ -6,10 +6,12 @@ type Storage struct {
 	store []*interface{}
 }
 
+// Store func
 func (s *Storage) Store() []*interface{} {
 	return s.store
 }
 
+// SetStore func
 func (s *Storage) SetStore(store []*interface{}) {
 	s.store = store
 }
@@ -23,6 +25,7 @@ func (s *Storage) Empty() bool {
 	return len(s.store) == 0
 }
 
+// EmptyWithoutRUnlock func
 func (s *Storage) EmptyWithoutRUnlock() bool {
 	if s.IsConcurrent() {
 		s.RWMutex.RLock()
@@ -30,6 +33,7 @@ func (s *Storage) EmptyWithoutRUnlock() bool {
 	return len(s.store) == 0
 }
 
+// EmptyWithoutUnlock func
 func (s *Storage) EmptyWithoutUnlock() bool {
 	if s.IsConcurrent() {
 		s.RWMutex.Lock()
@@ -46,6 +50,7 @@ func (s *Storage) Size() uint {
 	return uint(len(s.store))
 }
 
+// SizeWithoutRUnlock func
 func (s *Storage) SizeWithoutRUnlock() uint {
 	if s.IsConcurrent() {
 		s.RWMutex.RLock()
@@ -53,6 +58,7 @@ func (s *Storage) SizeWithoutRUnlock() uint {
 	return uint(len(s.store))
 }
 
+// SizeWithoutUnlock func
 func (s *Storage) SizeWithoutUnlock() uint {
 	if s.IsConcurrent() {
 		s.RWMutex.Lock()
@@ -60,6 +66,7 @@ func (s *Storage) SizeWithoutUnlock() uint {
 	return uint(len(s.store))
 }
 
+// SizeWithoutConcurrency func
 func (s *Storage) SizeWithoutConcurrency() uint {
 	return uint(len(s.store))
 }
