@@ -3,10 +3,10 @@ package test
 import (
 	"testing"
 
-	"github.com/alexandrenriq/golangds"
+	"github.com/alexandrenriq/golangds/elementary"
 )
 
 func TestHola(t *testing.T) {
-	m := golangds.Vector{}
+	m := gdselem.Vector{}
 	m.Append(1)
 }
