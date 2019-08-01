@@ -8,7 +8,7 @@ import (
 
 // Vector data structure
 type Vector struct {
-	gdsutil.Array
+	gdsutil.FreeStorage
 }
 
 // Data func
