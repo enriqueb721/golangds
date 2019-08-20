@@ -1,8 +1,13 @@
 package gdsutil
 
+import (
+	"github.com/alexandrenriq/golangds/types"
+)
+
 // Storage struct
 type Storage struct {
 	Mutex
+	gdstype.Types
 	store []*interface{}
 }
 

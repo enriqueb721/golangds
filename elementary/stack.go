@@ -34,12 +34,17 @@ func (s *Stack) Bottom() (interface{}, error) {
 }
 
 // Push func
-func (s *Stack) Push(element interface{}) {
+func (s *Stack) Push(element interface{}) error {
 	if s.IsConcurrent() {
 		s.RWMutex.Lock()
 		defer s.RWMutex.Unlock()
 	}
+	err := s.WatchType(element)
+	if err != nil {
+		return err
+	}
 	s.SetStore(append(s.Store(), &element))
+	return nil
 }
 
 // Pop func

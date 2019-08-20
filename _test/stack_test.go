@@ -30,6 +30,19 @@ func TestPush(t *testing.T) {
 	}
 }
 
+func TestPushDifferentTypes(t *testing.T) {
+	st := gdselem.Stack{}
+	err := st.Push(12)
+
+	if err != nil {
+		t.Error(err)
+	}
+	err = st.Push("string")
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestTopEmpty(t *testing.T) {
 	st := gdselem.Stack{}
 	_, err := st.Top()
