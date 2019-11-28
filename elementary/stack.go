@@ -39,10 +39,6 @@ func (s *Stack) Push(element interface{}) error {
 		s.RWMutex.Lock()
 		defer s.RWMutex.Unlock()
 	}
-	err := s.WatchType(element)
-	if err != nil {
-		return err
-	}
 	s.SetStore(append(s.Store(), &element))
 	return nil
 }

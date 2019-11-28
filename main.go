@@ -4,6 +4,7 @@ package golangds
 // https://newfivefour.com/golang-interface-type-assertions-switch.html
 // TODO: Bitset, String
 // TODO: List, ForwardList, DoublyLinkedList, CircularLinkedList
+// TODO: Tree
 // TODO: Heap(PriorityQueue)
 // TODO: Map, Multimap, HashMap, HashMultimap
 // TODO: Set, Multiset, HashSet, HashMultiset

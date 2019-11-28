@@ -8,12 +8,12 @@ import (
 
 // Vector data structure
 type Vector struct {
-	gdsutil.FreeStorage
+	gdsutil.Storage
 }
 
 // Data func
 func (v *Vector) Data() []*interface{} {
-	return v.Store
+	return v.Store()
 }
 
 // At func
@@ -24,7 +24,7 @@ func (v *Vector) At(index uint) (interface{}, error) {
 	if index >= v.SizeWithoutRUnlock() || index < 0 {
 		return nil, fmt.Errorf("Index '%d is out of limits", index)
 	}
-	return *v.Store[index], nil
+	return *v.Store()[index], nil
 }
 
 // Front func
@@ -35,7 +35,7 @@ func (v *Vector) Front() (interface{}, error) {
 	if v.EmptyWithoutRUnlock() {
 		return nil, fmt.Errorf("The Vector is empty, it should have at least one item")
 	}
-	return *v.Store[len(v.Store)-1], nil
+	return *v.Store()[len(v.Store())-1], nil
 }
 
 // Back func
@@ -46,7 +46,7 @@ func (v *Vector) Back() (interface{}, error) {
 	if v.EmptyWithoutRUnlock() {
 		return nil, fmt.Errorf("The Vector is empty, it should have at least one item")
 	}
-	return *v.Store[0], nil
+	return *v.Store()[0], nil
 }
 
 // Assign func
@@ -56,7 +56,7 @@ func (v *Vector) Assign(n uint, value *interface{}) {
 		defer v.RWMutex.Unlock()
 	}
 	for i := uint(0); i < n; i++ {
-		v.Store = append(v.Store, value)
+		v.SetStore(append(v.Store(), value))
 	}
 }
 
@@ -66,7 +66,7 @@ func (v *Vector) Append(element interface{}) {
 		v.RWMutex.Lock()
 		defer v.RWMutex.Unlock()
 	}
-	v.Store = append(v.Store, &element)
+	v.SetStore(append(v.Store(), &element))
 }
 
 // PopBack func
@@ -77,7 +77,7 @@ func (v *Vector) PopBack() error {
 	if v.EmptyWithoutUnlock() {
 		return fmt.Errorf("The Vector is empty, it should have at least one item")
 	}
-	v.Store = v.Store[:1]
+	v.SetStore(v.Store()[:1])
 	return nil
 }
 
@@ -90,13 +90,13 @@ func (v *Vector) Insert(index uint, element *interface{}) error {
 		return fmt.Errorf("The index %d should not be greater than the current size %d", index, v.SizeWithoutConcurrency())
 	}
 	if index == v.SizeWithoutConcurrency() {
-		v.Store = append(v.Store, element)
+		v.SetStore(append(v.Store(), element))
 		return nil
 	}
-	left := v.Store[:index]
-	right := v.Store[index:]
+	left := v.Store()[:index]
+	right := v.Store()[index:]
 	left = append(left, element)
-	v.Store = append(left, right...)
+	v.SetStore(append(left, right...))
 	return nil
 }
 
@@ -108,7 +108,7 @@ func (v *Vector) Erase(index uint) error {
 	if index >= v.SizeWithoutUnlock() {
 		return fmt.Errorf("The index %d should not be greater or equal than the current size %d", index, v.SizeWithoutConcurrency())
 	}
-	v.Store = append(v.Store[:index], v.Store[index+1:]...)
+	v.SetStore(append(v.Store()[:index], v.Store()[index+1:]...))
 	return nil
 }
 

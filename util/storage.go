@@ -1,13 +1,8 @@
 package gdsutil
 
-import (
-	"github.com/alexandrenriq/golangds/types"
-)
-
 // Storage struct
 type Storage struct {
 	Mutex
-	gdstype.Types
 	store []*interface{}
 }
 
@@ -24,7 +19,7 @@ func (s *Storage) SetStore(store []*interface{}) {
 // Empty func
 func (s *Storage) Empty() bool {
 	if s.IsConcurrent() {
-		s.RWMutex.RLock()
+		s.RWMutex.Lock()
 		defer s.RWMutex.RUnlock()
 	}
 	return len(s.store) == 0
