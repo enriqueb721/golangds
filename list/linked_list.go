@@ -4,7 +4,7 @@ import (
 	"github.com/alexandrenriq/golangds/util"
 )
 
-// List Data structure
-type List struct {
+// LinkedList Data structure
+type LinkedList struct {
 	gdsutil.Storage
 }
