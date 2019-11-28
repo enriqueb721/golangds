@@ -8,11 +8,19 @@ type Storage struct {
 
 // Store func
 func (s *Storage) Store() []*interface{} {
+	if s.IsConcurrent() {
+		s.RWMutex.Lock()
+		defer s.RWMutex.RUnlock()
+	}
 	return s.store
 }
 
 // SetStore func
 func (s *Storage) SetStore(store []*interface{}) {
+	if s.IsConcurrent() {
+		s.RWMutex.Lock()
+		defer s.RWMutex.RUnlock()
+	}
 	s.store = store
 }
 
