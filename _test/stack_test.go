@@ -7,7 +7,7 @@ import (
 	"github.com/alexandrenriq/golangds/elementary"
 )
 
-func TestPush(t *testing.T) {
+func TestStack_Push(t *testing.T) {
 	st := gdselem.Stack{}
 	for i := 0; i < 10000000; i++ {
 		st.Push(i)
@@ -30,20 +30,7 @@ func TestPush(t *testing.T) {
 	}
 }
 
-func TestPushDifferentTypes(t *testing.T) {
-	st := gdselem.Stack{}
-	err := st.Push(12)
-
-	if err != nil {
-		t.Error(err)
-	}
-	err = st.Push("string")
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestTopEmpty(t *testing.T) {
+func TestStack_TopEmpty(t *testing.T) {
 	st := gdselem.Stack{}
 	_, err := st.Top()
 	if err != nil {
@@ -53,7 +40,7 @@ func TestTopEmpty(t *testing.T) {
 	t.Error("There is no caught of error")
 }
 
-func TestEmpty1(t *testing.T) {
+func TestStack_Empty1(t *testing.T) {
 	st := gdselem.Stack{}
 	st.Push(1)
 	st.Push(2)
@@ -100,7 +87,7 @@ func TestEmpty1(t *testing.T) {
 	}
 }
 
-func TestEmpty2(t *testing.T) {
+func TestStack_Empty2(t *testing.T) {
 	st := gdselem.Stack{}
 	for i := 0; i < 10000000; i++ {
 		st.Push(10000000)
@@ -119,7 +106,7 @@ func TestEmpty2(t *testing.T) {
 	}
 }
 
-func TestTopNotEmpty(t *testing.T) {
+func TestStack_TopNotEmpty(t *testing.T) {
 	st := gdselem.Stack{}
 	for i := 0; i < 10000000; i++ {
 		st.Push(10000000)
@@ -136,7 +123,7 @@ func TestTopNotEmpty(t *testing.T) {
 	}
 }
 
-func TestClearThenPush(t *testing.T) {
+func TestStack_ClearThenPush(t *testing.T) {
 	st := gdselem.Stack{}
 	for i := 0; i < 10; i++ {
 		st.Push(i)
@@ -155,7 +142,7 @@ func TestClearThenPush(t *testing.T) {
 
 // TODO: test swap function
 
-func TestConcurrentPushAndPop(t *testing.T) {
+func TestStack_ConcurrentPushAndPop(t *testing.T) {
 	st := gdselem.Stack{}
 	st.EnableConcurrency()
 	endF1 := false
